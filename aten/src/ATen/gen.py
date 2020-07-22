@@ -50,7 +50,7 @@ parser.add_argument(
     action='store_true',
     help='Generate Vulkan backend functions')
 parser.add_argument(
-    '--op_registration_whitelist',
+    '--op_registration_allowlist',
     nargs='*',
     help='filter op registrations by the whitelist (if set); '
          'each item is `namespace`::`operator name` without overload name; '
@@ -64,12 +64,12 @@ parser.add_argument(
     '--per_op_registration',
     action='store_true',
     help='group function registrations by op name and write to separate files; '
-         'must also set --op_registration_whitelist param')
+         'must also set --op_registration_allowlist param')
 parser.add_argument(
     '--force_schema_registration',
     action='store_true',
     help='force it to generate schema-only registrations for all ops, including'
-         'those that are not listed on --op_registration_whitelist')
+         'those that are not listed on --op_registration_allowlist')
 options = parser.parse_args()
 
 # NB: It is mandatory to NOT use os.path.join here, as the install directory
@@ -429,7 +429,7 @@ def declare_outputs():
 
     if options.per_op_registration:
         if op_registration_whitelist is None:
-            raise Exception("Must set --op_registration_whitelist for per-op registration.")
+            raise Exception("Must set --op_registration_allowlist for per-op registration.")
         for whitelisted_op in op_registration_whitelist:
             fname = gen_per_op_registration_filename(whitelisted_op)
             file_manager.will_write(fname)
